@@ -31,6 +31,7 @@ jobs:
       - run:
           name: 'cdk_diff'
           command: |
+            echo $CIRCLE_PULL_REQUEST
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               pr_number=${CIRCLE_PULL_REQUEST##*/}
               block='```'
@@ -45,8 +46,21 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               npm run ci_deploy
             fi
+  notice:
+    executor: 'default'
+    steps:
       - slack/status:
-          fail_only: 'true'
-          failure_message: 'cdk deploy has failed :crying_cat_face:'
-          webhook: $SLACK_WEBHOOK
-
+            success_message: 'cdk deploy has succeeded'
+            failure_message: 'cdk deploy has failed :crying_cat_face:'
+            webhook: $SLACK_WEBHOOK
+workflows:
+  build:
+    jobs:
+      - build
+      - notice:
+          requires:
+            - build
+          filters:
+            branches:
+              only: 
+                - master
