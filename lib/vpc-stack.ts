@@ -5,7 +5,7 @@ export class VPCStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
         [
-            { name: 'test-vpc', cidr: '172.32.1.0/24' }
+            { name: 'testvpc', cidr: '172.32.1.0/24' }
         ].forEach(v =>
             new ec2.VpcNetwork(this, v.name, {
                 cidr: v.cidr,
