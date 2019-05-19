@@ -35,7 +35,7 @@ jobs:
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               pr_number=${CIRCLE_PULL_REQUEST##*/}
               block='```'
-              diff=$(echo -e "cdk diff\n${block}$(npm run --silent ci_diff)\n${block}")
+              diff=$(echo -e "cdk diff\n${block}\n$(npm run --silent ci_diff)\n${block}")
               data=$(jq -n --arg body "$diff" '{ body: $body }') # escape
               curl -X POST -H 'Content-Type:application/json' \
                 -H 'Accept: application/vnd.github.v3+json' \
@@ -50,7 +50,7 @@ jobs:
     executor: 'default'
     steps:
       - slack/status:
-            success_message: 'cdk deploy has succeeded'
+            success_message: 'cdk deploy has succeeded :tada:'
             failure_message: 'cdk deploy has failed :crying_cat_face:'
             webhook: $SLACK_WEBHOOK
 workflows:
