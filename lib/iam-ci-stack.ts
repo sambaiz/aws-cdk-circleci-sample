@@ -8,10 +8,12 @@ export class IAMCIStack extends cdk.Stack {
       groupName: 'CI',
     })
     const ciAssumeRole = new iam.Role(this, 'CIAssumeRole', {
+      roleName: 'CIAssumeRole',
       assumedBy: new iam.AccountPrincipal(cdk.Aws.accountId),
       managedPolicyArns: ['arn:aws:iam::aws:policy/AdministratorAccess']
     })
     const ciUserRole = new iam.Role(this, 'CIUserRole', {
+      roleName: 'CIUserRole',
       assumedBy: new iam.AccountPrincipal(cdk.Aws.accountId)
     })
     const ciUserPolicy = new iam.Policy(this, 'CIPolicy', {
