@@ -31,7 +31,6 @@ jobs:
       - run:
           name: 'cdk_diff'
           command: |
-            echo $CIRCLE_PULL_REQUEST
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               pr_number=${CIRCLE_PULL_REQUEST##*/}
               block='```'
@@ -43,24 +42,13 @@ jobs:
                 -d "$data" \
                 "https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/issues/${pr_number}/comments"
             fi
+      - run:
+          name: 'cdk_deploy'
+          command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               npm run ci_deploy
             fi
-  notice:
-    executor: 'default'
-    steps:
       - slack/status:
-            success_message: 'cdk deploy has succeeded :tada:'
-            failure_message: 'cdk deploy has failed :crying_cat_face:'
-            webhook: $SLACK_WEBHOOK
-workflows:
-  build:
-    jobs:
-      - build
-      - notice:
-          requires:
-            - build
-          filters:
-            branches:
-              only: 
-                - master
+          success_message: "cdk build/deploy (${CIRCLE_BRANCH}) has succeeded :tada:"
+          failure_message: "cdk build/deploy (${CIRCLE_BRANCH}) has failed :crying_cat_face:"
+          webhook: $SLACK_WEBHOOK
