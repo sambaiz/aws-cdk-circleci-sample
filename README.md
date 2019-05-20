@@ -1,7 +1,26 @@
-# Useful commands
+# aws-cdk-circleci-sample
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+## Features
+
+- When create a PR, post results of `cdk diff` on there.
+
+![Post results](./images/pr.png)
+
+- When the branch is merged, run `cdk deploy`.
+
+- Notify the result on Slack.
+
+![Notify on Slack](./images/slack.png)
+
+## Settings
+
+Add AWS keys and following environment variables to CircleCI's build settings
+
+- ASSUME_ROLE_ARN
+- GITHUB_TOKEN
+- SLACK_WEBHOOK
+
+## Article
+
+[CDK/CircleCI/GitHubでAWSリソース管理リポジトリを作る - sambaiz-net](https://www.sambaiz.net/article/223/)
+
