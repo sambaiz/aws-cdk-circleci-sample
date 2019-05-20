@@ -1,6 +1,5 @@
 import cdk = require('@aws-cdk/cdk');
 import ec2 = require('@aws-cdk/aws-ec2')
-import s3 = require('@aws-cdk/aws-s3')
 
 export class VPCStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -25,8 +24,5 @@ export class VPCStack extends cdk.Stack {
                 ]
             })
         )
-        new s3.Bucket(this, 'testBucket', {
-            bucketName: 'foobar-foobar1234'
-        })
     }
 }
