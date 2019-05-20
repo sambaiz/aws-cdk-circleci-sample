@@ -14,7 +14,7 @@
 
 ## Settings
 
-Add AWS keys and following environment variables to CircleCI's build settings
+Add AWS keys and following environment variables to CircleCI's build settings.
 
 - ASSUME_ROLE_ARN
 - GITHUB_TOKEN
