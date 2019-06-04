@@ -1,9 +1,18 @@
 import cdk = require('@aws-cdk/cdk');
 import iam = require('@aws-cdk/aws-iam')
 
-export class IAMCIStack extends cdk.Stack {
+// Shareng resources for stg and prd envinronment.
+export class SharedIAMCIStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    const ciUser = this.ciUser()
+    const ciAccessKey = this.accessKey(ciUser)
+    new cdk.CfnOutput(this, `${this.stackName}-CircleCIUserAccessKeyId`, { value: ciAccessKey.accessKeyId });
+    new cdk.CfnOutput(this, `${this.stackName}-CircleCIUserSecretAccessKey`, { value: ciAccessKey.accessKeySecretAccessKey });
+  }
+
+  private ciUser() {
     const ciGroup = new iam.Group(this, 'CIGroup', {
       groupName: 'CI',
     })
@@ -25,14 +34,15 @@ export class IAMCIStack extends cdk.Stack {
       ]
     })
     ciUserPolicy.attachToRole(ciUserRole)
-    const ciUser = new iam.User(this, 'CircleCIUser', {
+    return new iam.User(this, 'CircleCIUser', {
       userName: 'CircleCI',
       groups: [ciGroup]
     })
-    const ciAccessKey = new iam.CfnAccessKey(this, 'CircleCIUserAccessKey', {
-      userName: ciUser.userName
+  }
+
+  private accessKey(user: iam.User) {
+    return new iam.CfnAccessKey(this, 'CircleCIUserAccessKey', {
+      userName: user.userName
     })
-    new cdk.CfnOutput(this, 'CircleCIUserAccessKeyId', { value: ciAccessKey.accessKeyId });
-    new cdk.CfnOutput(this, 'CircleCIUserSecretAccessKey', { value: ciAccessKey.accessKeySecretAccessKey });
   }
 }

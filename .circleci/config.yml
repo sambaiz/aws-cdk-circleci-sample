@@ -32,9 +32,13 @@ jobs:
           name: 'cdk_diff'
           command: |
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
+              export ENV=stg
+              if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+                export ENV=prd
+              fi 
               pr_number=${CIRCLE_PULL_REQUEST##*/}
               block='```'
-              diff=$(echo -e "cdk diff\n${block}\n$(npm run --silent ci_diff)\n${block}")
+              diff=$(echo -e "cdk diff (env=${ENV})\n${block}\n$(npm run --silent ci_diff)\n${block}")
               data=$(jq -n --arg body "$diff" '{ body: $body }') # escape
               curl -X POST -H 'Content-Type:application/json' \
                 -H 'Accept: application/vnd.github.v3+json' \
@@ -46,8 +50,10 @@ jobs:
           name: 'cdk_deploy'
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              npm run ci_deploy
-            fi
+              ENV=prd npm run ci_deploy
+            elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              ENV=stg npm run ci_deploy
+            fi 
       - slack/status:
           success_message: "cdk build/deploy (${CIRCLE_BRANCH}) has succeeded :tada:"
           failure_message: "cdk build/deploy (${CIRCLE_BRANCH}) has failed :crying_cat_face:"
