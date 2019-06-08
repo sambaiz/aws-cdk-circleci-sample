@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  slack: circleci/slack@2.5.0
+  slack: circleci/slack@3.2.0
 executors:
   default:
     docker:
@@ -57,3 +57,4 @@ jobs:
           success_message: "cdk build/deploy (${CIRCLE_BRANCH}) has succeeded :tada:"
           failure_message: "cdk build/deploy (${CIRCLE_BRANCH}) has failed :crying_cat_face:"
           webhook: $SLACK_WEBHOOK
+          only_for_branches: "develop,master"

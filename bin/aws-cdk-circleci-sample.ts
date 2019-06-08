@@ -14,7 +14,6 @@ if (deployEnv !== 'Stg' && deployEnv !== 'Prd') {
 }
 
 const vpcStack = new VPCStack(app, `${deployEnv}VPCStack`);
-vpcStack.exportValue.privateSubnetIds
 const someAppStack = new SomeAppStack(app, `${deployEnv}SomeAppStack`, {
     dbSubnetIds: [
         vpcStack.exportValue.privateSubnetIds[0].makeImportValue(),
