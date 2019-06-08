@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
-import cdk = require('@aws-cdk/cdk');
-import { SharedIAMCIStack } from '../lib/iam/shared-iam-ci-stack';
+import * as cdk from '@aws-cdk/cdk'
 import { VPCStack } from '../lib/vpc/vpc-stack';
 import { SomeAppStack } from '../lib/some-app/some-app-stack'
 
@@ -10,11 +9,14 @@ const deployEnv = app.node.getContext('env').replace(/^[a-z]/g, (v: string) => {
     return v.toUpperCase()
 })
 
-new SharedIAMCIStack(app, 'SharedIAMCIStack');
+if (deployEnv !== 'Stg' && deployEnv !== 'Prd') {
+    throw new Error(`unknown env ${deployEnv}`)
+}
+
 const vpcStack = new VPCStack(app, `${deployEnv}VPCStack`);
 vpcStack.exportValue.privateSubnetIds
 const someAppStack = new SomeAppStack(app, `${deployEnv}SomeAppStack`, {
-    privateSubnetIds: [
+    dbSubnetIds: [
         vpcStack.exportValue.privateSubnetIds[0].makeImportValue(),
         vpcStack.exportValue.privateSubnetIds[1].makeImportValue(),
     ]

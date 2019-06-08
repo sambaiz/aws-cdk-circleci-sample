@@ -1,5 +1,5 @@
-import cdk = require('@aws-cdk/cdk');
-import ec2 = require('@aws-cdk/aws-ec2')
+import * as cdk from '@aws-cdk/cdk'
+import * as ec2 from '@aws-cdk/aws-ec2'
 
 interface ExportValue {
     publicSubnetIds: cdk.CfnOutput[],
@@ -38,19 +38,19 @@ export class VPCStack extends cdk.Stack {
         } else {
             throw new Error(`unknown env ${this.deployEnv}`)
         }
-        return new ec2.VpcNetwork(this, `${this.deployEnv}-vpc`, {
+        return new ec2.Vpc(this, `${this.deployEnv}-vpc`, {
             cidr: cidr,
             maxAZs: 2,
             subnetConfiguration: [
                 {
                     cidrMask: 26,
                     subnetType: ec2.SubnetType.Public,
-                    name: `stg-vpc-public`
+                    name: `${this.deployEnv}-vpc-public`
                 },
                 {
                     cidrMask: 26,
                     subnetType: ec2.SubnetType.Private,
-                    name: `stg-vpc-private`
+                    name: `${this.deployEnv}-vpc-private`
                 }
             ]
         })

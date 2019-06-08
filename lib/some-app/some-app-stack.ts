@@ -1,7 +1,8 @@
-import cdk = require('@aws-cdk/cdk');
+import * as cdk from '@aws-cdk/cdk'
+import * as rds from '@aws-cdk/aws-rds'
 
 interface ImportValue {
-    privateSubnetIds: string[]
+    dbSubnetIds: string[]
 }
 
 export class SomeAppStack extends cdk.Stack {
@@ -11,6 +12,17 @@ export class SomeAppStack extends cdk.Stack {
         super(scope, id, props);
         this.deployEnv = this.node.getContext('env')
         this.importValue = importValue
-        console.log(this.importValue)
+
+        this.dbSubnetGroup()
     }
+
+    private dbSubnetGroup() {
+        new rds.CfnDBSubnetGroup(this, 'DBSubnetGroup', {
+            dbSubnetGroupDescription: `${this.deployEnv}_subnet_group_for_some_app_db`,
+            subnetIds: this.importValue.dbSubnetIds,
+            dbSubnetGroupName: `${this.deployEnv}-some-app`
+        })
+    }
+
+
 }

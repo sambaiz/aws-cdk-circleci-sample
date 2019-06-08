@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  CIAssumeRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: 'CIAssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AdministratorAccess'
+      AssumeRolePolicyDocument: 
+        Version: '2012-10-17'
+        Statement: 
+          - Effect: 'Allow'
+            Principal: 
+              AWS: 
+                - !Ref AWS::AccountId
+            Action: 
+              - 'sts:AssumeRole'
+  CIGroup:
+    Type: 'AWS::IAM::Group'
+    Properties:
+      GroupName: 'CI'
+  CIPolicies:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: 'CI'
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: 'sts:AssumeRole'
+            Resource: !GetAtt CIAssumeRole.Arn
+      Groups:
+        - !Ref CIGroup
+  CIUser:
+    Type: 'AWS::IAM::User'
+    Properties:
+      UserName: 'CI'
+      Groups:
+        - !Ref CIGroup
+  CIUserKeys:
+    Type: 'AWS::IAM::AccessKey'
+    Properties:
+      UserName: !Ref CIUser
+Outputs:
+  AccessKey:
+    Value: !Ref CIUserKeys
+  SecretKey:
+    Value: !GetAtt CIUserKeys.SecretAccessKey
