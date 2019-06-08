@@ -12,6 +12,17 @@
 
 ![Notify on Slack](./images/slack.png)
 
+## Flow
+
+1. push codes on a branch
+2. create PR to the develop branch
+3. post env=stg diff by CI
+4. review and merge
+5. create PR from develop to master
+6. deploy with env=stg and post env=prd diff by CI
+7. review and merge
+8. deploy with env=prd by CI
+
 ## Settings
 
 1. upload `cfn/iam-ci-user-stack.yaml` from AWS CloudFormation Console and get AccessKey/Secret from Outputs (Optional)
