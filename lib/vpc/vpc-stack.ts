@@ -17,14 +17,12 @@ export class VPCStack extends cdk.Stack {
     this.exportValue = {
       publicSubnetIds: vpc.publicSubnets.map((v, i) => {
         return new cdk.CfnOutput(this, `PublicSubnet${i}Id`, {
-          value: v.subnetId,
-          export: `${this.stackName}-PublicSubnet${i}Id`
+          value: v.subnetId
         })
       }),
       privateSubnetIds: vpc.privateSubnets.map((v, i) => {
         return new cdk.CfnOutput(this, `PrivateSubnet${i}Id`, {
-          value: v.subnetId,
-          export: `${this.stackName}-PrivateSubnet${i}Id`
+          value: v.subnetId
         })
       })
     }
