@@ -24,4 +24,3 @@
 ## Article
 
 [CDK/CircleCI/GitHubでAWSリソース管理リポジトリを作る - sambaiz-net](https://www.sambaiz.net/article/223/)
-
