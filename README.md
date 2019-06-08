@@ -14,7 +14,8 @@
 
 ## Settings
 
-Add AWS keys and following environment variables to CircleCI's build settings
+1. upload `cfn/iam-ci-user-stack.yaml` from AWS CloudFormation Console and get AccessKey/Secret from Outputs (Optional)
+2. Set AWS Permissions and following environment variables to CircleCI
 
 - ASSUME_ROLE_ARN
 - GITHUB_TOKEN
