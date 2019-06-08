@@ -7,13 +7,17 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
+    "format": "prettier --write \"lib/**/*.ts\"",
     "ci_diff": "cdk diff -c env=${ENV:-stg} 2>&1 | sed -r 's/\\x1B\\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g' || true",
     "ci_deploy": "cdk deploy -c env=${ENV:-stg} --require-approval never"
   },
   "devDependencies": {
     "@types/node": "8.10.45",
     "typescript": "^3.3.3333",
-    "aws-cdk": "^0.33.0"
+    "aws-cdk": "^0.33.0",
+    "husky": "^2.4.0",
+    "lint-staged": "^8.2.0",
+    "prettier": "^1.18.2"
   },
   "dependencies": {
     "@aws-cdk/aws-ec2": "^0.33.0",
