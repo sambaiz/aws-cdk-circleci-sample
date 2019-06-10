@@ -34,7 +34,7 @@ export class VPCStack extends cdk.Stack {
     }
   }
 
-  export() {
+  export(): ExportValue {
     return {
       publicSubnetIds: this.exportOutput.publicSubnetIds.map(v =>
         v.makeImportValue()
