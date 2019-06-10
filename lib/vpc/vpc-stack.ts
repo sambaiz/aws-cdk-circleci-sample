@@ -1,19 +1,19 @@
 import * as cdk from '@aws-cdk/cdk'
 import * as ec2 from '@aws-cdk/aws-ec2'
 
-interface ExportOutput {
+interface Export {
   vpc: ec2.Vpc
 }
 
 export class VPCStack extends cdk.Stack {
   protected deployEnv: string
-  exportOutput: ExportOutput
+  export: Export
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props)
     this.deployEnv = this.node.getContext('env')
     const vpc = this.vpc()
 
-    this.exportOutput = {
+    this.export = {
       vpc: vpc
     }
   }
