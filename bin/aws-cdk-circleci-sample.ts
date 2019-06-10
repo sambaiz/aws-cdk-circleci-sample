@@ -13,10 +13,10 @@ if (deployEnv !== 'Stg' && deployEnv !== 'Prd') {
     throw new Error(`unknown env ${deployEnv}`)
 }
 
-const vpcStack = new VPCStack(app, `${deployEnv}VPCStack`);
+const vpcStackExport = new VPCStack(app, `${deployEnv}VPCStack`).export();
 new SomeAppStack(app, `${deployEnv}SomeAppStack`, {
     dbSubnetIds: [
-        vpcStack.exportValue.privateSubnetIds[0],
-        vpcStack.exportValue.privateSubnetIds[1],
+        vpcStackExport.privateSubnetIds[0],
+        vpcStackExport.privateSubnetIds[1],
     ]
 })

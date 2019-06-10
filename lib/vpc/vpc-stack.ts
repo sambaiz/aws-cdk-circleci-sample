@@ -1,5 +1,11 @@
 import * as cdk from '@aws-cdk/cdk'
 import * as ec2 from '@aws-cdk/aws-ec2'
+import { CfnOutput } from '@aws-cdk/cdk'
+
+interface ExportOutput {
+  publicSubnetIds: CfnOutput[]
+  privateSubnetIds: CfnOutput[]
+}
 
 interface ExportValue {
   publicSubnetIds: string[]
@@ -8,25 +14,37 @@ interface ExportValue {
 
 export class VPCStack extends cdk.Stack {
   protected deployEnv: string
-  exportValue: ExportValue
+  private exportOutput: ExportOutput
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props)
     this.deployEnv = this.node.getContext('env')
     const vpc = this.vpc()
 
-    this.exportValue = {
+    this.exportOutput = {
       publicSubnetIds: vpc.publicSubnets.map((v, i) => {
         return new cdk.CfnOutput(this, `PublicSubnet${i}Id`, {
           value: v.subnetId
-        }).makeImportValue()
+        })
       }),
       privateSubnetIds: vpc.privateSubnets.map((v, i) => {
         return new cdk.CfnOutput(this, `PrivateSubnet${i}Id`, {
           value: v.subnetId
-        }).makeImportValue()
+        })
       })
     }
   }
+
+  export(): ExportValue {
+    return {
+      publicSubnetIds: this.exportOutput.publicSubnetIds.map(v =>
+        v.makeImportValue()
+      ),
+      privateSubnetIds: this.exportOutput.privateSubnetIds.map(v =>
+        v.makeImportValue()
+      )
+    }
+  }
+
   private vpc() {
     let cidr: string | null
     if (this.deployEnv === 'stg') {
