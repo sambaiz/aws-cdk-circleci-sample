@@ -2,8 +2,8 @@ import * as cdk from '@aws-cdk/cdk'
 import * as ec2 from '@aws-cdk/aws-ec2'
 
 interface ExportValue {
-  publicSubnetIds: cdk.CfnOutput[]
-  privateSubnetIds: cdk.CfnOutput[]
+  publicSubnetIds: string[]
+  privateSubnetIds: string[]
 }
 
 export class VPCStack extends cdk.Stack {
@@ -18,12 +18,12 @@ export class VPCStack extends cdk.Stack {
       publicSubnetIds: vpc.publicSubnets.map((v, i) => {
         return new cdk.CfnOutput(this, `PublicSubnet${i}Id`, {
           value: v.subnetId
-        })
+        }).makeImportValue()
       }),
       privateSubnetIds: vpc.privateSubnets.map((v, i) => {
         return new cdk.CfnOutput(this, `PrivateSubnet${i}Id`, {
           value: v.subnetId
-        })
+        }).makeImportValue()
       })
     }
   }
